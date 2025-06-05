@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -171,17 +172,23 @@ const CertiFlash: React.FC = () => {
 
   // Démarrer un module
   const startModule = (module: Module) => {
+    console.log('Démarrage du module:', module.id);
     setCurrentModule(module);
     setActiveTab('practice');
     
     // Filtrer les questions du module
     const moduleQuestions = questions.filter(q => q.moduleId === module.id);
+    console.log('Questions trouvées pour le module:', moduleQuestions.length);
+    
     if (moduleQuestions.length > 0) {
       // Sélectionner une question aléatoire ou la première
       const randomQuestion = moduleQuestions[Math.floor(Math.random() * moduleQuestions.length)];
+      console.log('Question sélectionnée:', randomQuestion);
       setCurrentQuestion(randomQuestion);
       setSelectedAnswer('');
       setShowResult(false);
+    } else {
+      console.warn('Aucune question trouvée pour ce module');
     }
   };
 
