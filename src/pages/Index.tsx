@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -9,7 +8,9 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Trophy, Flame, Zap, Target, BookOpen, Award, Star, CheckCircle, XCircle, Play } from 'lucide-react';
+import { Trophy, Flame, Zap, Target, BookOpen, Award, Star, CheckCircle, XCircle, Play, Home, ArrowLeft } from 'lucide-react';
+import HomePage from '@/components/HomePage';
+import { awsMLModules, awsMLQuestions, type Question, type Module } from '@/data/awsMLQuestions';
 
 // Configuration Firebase et variables globales
 const appId = typeof window !== 'undefined' && (window as any).__app_id ? (window as any).__app_id : 'certiflash-demo';
@@ -36,111 +37,6 @@ interface UserData {
   questionHistory: { [questionId: string]: { correct: number; incorrect: number; lastAnswered: string } };
 }
 
-interface Question {
-  id: string;
-  type: 'mcq' | 'trueFalse' | 'matching' | 'fillBlank';
-  question: string;
-  options?: string[];
-  correctAnswer: string | string[];
-  explanation: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  moduleId: string;
-}
-
-interface Module {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  questionsCount: number;
-  requiredXP: number;
-  color: string;
-}
-
-// Données initiales des modules AWS ML
-const initialModules: Module[] = [
-  {
-    id: 'sagemaker',
-    title: 'Amazon SageMaker',
-    description: 'Plateforme ML entièrement gérée',
-    icon: '🤖',
-    questionsCount: 15,
-    requiredXP: 0,
-    color: 'bg-blue-500'
-  },
-  {
-    id: 'storage-data',
-    title: 'Stockage & Données',
-    description: 'S3, Redshift, DynamoDB',
-    icon: '💾',
-    questionsCount: 12,
-    requiredXP: 50,
-    color: 'bg-green-500'
-  },
-  {
-    id: 'ai-services',
-    title: 'Services IA de Haut Niveau',
-    description: 'Rekognition, Comprehend, Textract',
-    icon: '🧠',
-    questionsCount: 10,
-    requiredXP: 100,
-    color: 'bg-purple-500'
-  },
-  {
-    id: 'security-monitoring',
-    title: 'Sécurité & Surveillance',
-    description: 'IAM, CloudWatch, CloudTrail',
-    icon: '🔒',
-    questionsCount: 8,
-    requiredXP: 150,
-    color: 'bg-orange-500'
-  }
-];
-
-// Questions initiales pour démonstration
-const initialQuestions: Question[] = [
-  {
-    id: 'sm-1',
-    type: 'mcq',
-    question: 'Quel service AWS est une plateforme centrale entièrement gérée pour le cycle de vie du ML ?',
-    options: ['Amazon SageMaker', 'Amazon EC2', 'AWS Lambda', 'Amazon EMR'],
-    correctAnswer: 'Amazon SageMaker',
-    explanation: 'SageMaker est la plateforme ML complète d\'AWS qui couvre tout le cycle de vie du machine learning.',
-    difficulty: 'easy',
-    moduleId: 'sagemaker'
-  },
-  {
-    id: 'sm-2',
-    type: 'trueFalse',
-    question: 'SageMaker Ground Truth est un service de déploiement de modèles.',
-    options: ['Vrai', 'Faux'],
-    correctAnswer: 'Faux',
-    explanation: 'SageMaker Ground Truth est un service d\'étiquetage de données, pas de déploiement.',
-    difficulty: 'medium',
-    moduleId: 'sagemaker'
-  },
-  {
-    id: 'storage-1',
-    type: 'fillBlank',
-    question: 'Le service _______ est le stockage d\'objets principal d\'AWS.',
-    options: [],
-    correctAnswer: 'S3',
-    explanation: 'Amazon S3 (Simple Storage Service) est le service de stockage d\'objets de référence d\'AWS.',
-    difficulty: 'easy',
-    moduleId: 'storage-data'
-  },
-  {
-    id: 'ai-1',
-    type: 'mcq',
-    question: 'Quel service AWS permet la reconnaissance d\'images et de vidéos ?',
-    options: ['Amazon Rekognition', 'Amazon Comprehend', 'Amazon Textract', 'Amazon Polly'],
-    correctAnswer: 'Amazon Rekognition',
-    explanation: 'Amazon Rekognition analyse les images et vidéos pour détecter objets, personnes, texte, scènes et activités.',
-    difficulty: 'medium',
-    moduleId: 'ai-services'
-  }
-];
-
 const CertiFlash: React.FC = () => {
   // États de l'application
   const [user, setUser] = useState<any>(null);
@@ -153,6 +49,7 @@ const CertiFlash: React.FC = () => {
     lastActive: new Date().toISOString(),
     questionHistory: {}
   });
+  const [currentLearningPath, setCurrentLearningPath] = useState<string | null>(null);
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -226,25 +123,25 @@ const CertiFlash: React.FC = () => {
   const initializeContent = async (db: any) => {
     try {
       // Vérifier si le contenu existe déjà
-      const contentDoc = await getDoc(doc(db, `artifacts/${appId}/public/data/certiFlashContent`));
+      const contentDoc = await getDoc(doc(db, `artifacts/${appId}/public/data/awsMLContent`));
       
       if (!contentDoc.exists()) {
         // Ajouter le contenu initial
-        await setDoc(doc(db, `artifacts/${appId}/public/data/certiFlashContent`), {
-          modules: initialModules,
-          questions: initialQuestions,
-          version: '1.0',
+        await setDoc(doc(db, `artifacts/${appId}/public/data/awsMLContent`), {
+          modules: awsMLModules,
+          questions: awsMLQuestions,
+          version: '2.0',
           lastUpdated: new Date().toISOString()
         });
-        console.log('Contenu initial ajouté à Firestore');
+        console.log('Contenu AWS ML mis à jour dans Firestore');
       }
       
       // Charger les questions
-      setQuestions(initialQuestions);
+      setQuestions(awsMLQuestions);
     } catch (error) {
       console.error('Erreur lors de l\'initialisation du contenu:', error);
       // Utiliser les données locales en cas d'erreur
-      setQuestions(initialQuestions);
+      setQuestions(awsMLQuestions);
     }
   };
 
@@ -258,6 +155,17 @@ const CertiFlash: React.FC = () => {
       await setDoc(userDocRef, newUserData);
     } catch (error) {
       console.error('Erreur de sauvegarde:', error);
+    }
+  };
+
+  // Sélectionner un parcours d'apprentissage
+  const selectLearningPath = (pathId: string) => {
+    setCurrentLearningPath(pathId);
+    if (pathId === 'aws-ml') {
+      setActiveTab('modules');
+    } else {
+      // Pour les autres parcours, afficher un message "Bientôt disponible"
+      setActiveTab('coming-soon');
     }
   };
 
@@ -275,6 +183,21 @@ const CertiFlash: React.FC = () => {
       setSelectedAnswer('');
       setShowResult(false);
     }
+  };
+
+  // Retour à l'accueil
+  const goHome = () => {
+    setCurrentLearningPath(null);
+    setCurrentModule(null);
+    setCurrentQuestion(null);
+    setActiveTab('home');
+  };
+
+  // Retour aux modules
+  const goToModules = () => {
+    setCurrentModule(null);
+    setCurrentQuestion(null);
+    setActiveTab('modules');
   };
 
   // Soumettre une réponse
@@ -346,6 +269,17 @@ const CertiFlash: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
+              {(currentLearningPath || currentModule) && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={currentModule ? goToModules : goHome}
+                  className="mr-2"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  {currentModule ? 'Modules' : 'Accueil'}
+                </Button>
+              )}
               <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                 CertiFlash ⚡
               </div>
@@ -377,41 +311,25 @@ const CertiFlash: React.FC = () => {
         </div>
       </header>
 
-      {/* Navigation principale */}
+      {/* Contenu principal */}
       <div className="max-w-6xl mx-auto px-4 py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="home" className="flex items-center space-x-2">
-              <BookOpen className="h-4 w-4" />
-              <span>Modules</span>
-            </TabsTrigger>
-            <TabsTrigger value="practice" className="flex items-center space-x-2">
-              <Target className="h-4 w-4" />
-              <span>Pratique</span>
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center space-x-2">
-              <Trophy className="h-4 w-4" />
-              <span>Profil</span>
-            </TabsTrigger>
-            <TabsTrigger value="leaderboard" className="flex items-center space-x-2">
-              <Award className="h-4 w-4" />
-              <span>Classement</span>
-            </TabsTrigger>
-          </TabsList>
+        {activeTab === 'home' && (
+          <HomePage userData={userData} onSelectPath={selectLearningPath} />
+        )}
 
-          {/* Page d'accueil - Modules */}
-          <TabsContent value="home" className="space-y-6">
+        {activeTab === 'modules' && currentLearningPath === 'aws-ml' && (
+          <div className="space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Maîtrisez AWS Machine Learning
+                AWS Machine Learning Certification
               </h1>
               <p className="text-lg text-gray-600">
-                Préparez votre certification MLS-C01 un flash à la fois
+                Maîtrisez tous les services AWS pour réussir votre certification MLS-C01
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {initialModules.map((module, index) => (
+              {awsMLModules.map((module, index) => (
                 <Card key={module.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -432,6 +350,13 @@ const CertiFlash: React.FC = () => {
                       <span className="text-sm text-gray-500">{module.questionsCount} questions</span>
                       <Progress value={userData.completedModules.includes(module.id) ? 100 : 0} className="w-20" />
                     </div>
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {module.categories.slice(0, 3).map((category) => (
+                        <Badge key={category} variant="secondary" className="text-xs">
+                          {category}
+                        </Badge>
+                      ))}
+                    </div>
                     <Button 
                       onClick={() => startModule(module)}
                       disabled={userData.xp < module.requiredXP}
@@ -444,16 +369,31 @@ const CertiFlash: React.FC = () => {
                 </Card>
               ))}
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          {/* Page de pratique */}
-          <TabsContent value="practice" className="space-y-6">
+        {activeTab === 'coming-soon' && (
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4">🚧</div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Bientôt disponible !</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Ce parcours d'apprentissage est en cours de développement.
+            </p>
+            <Button onClick={goHome} variant="outline">
+              <Home className="h-4 w-4 mr-2" />
+              Retour à l'accueil
+            </Button>
+          </div>
+        )}
+
+        {activeTab === 'practice' && (
+          <div className="space-y-6">
             {!currentQuestion ? (
               <div className="text-center py-12">
                 <Target className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h2 className="text-2xl font-semibold text-gray-700 mb-2">Choisissez un module</h2>
-                <p className="text-gray-500">Sélectionnez un module depuis l'onglet Modules pour commencer à pratiquer</p>
-                <Button onClick={() => setActiveTab('home')} className="mt-4">
+                <p className="text-gray-500">Sélectionnez un module pour commencer à pratiquer</p>
+                <Button onClick={goToModules} className="mt-4">
                   Voir les modules
                 </Button>
               </div>
@@ -466,6 +406,13 @@ const CertiFlash: React.FC = () => {
                       <Badge variant={currentQuestion.difficulty === 'hard' ? 'destructive' : currentQuestion.difficulty === 'medium' ? 'default' : 'secondary'}>
                         {currentQuestion.difficulty}
                       </Badge>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {currentQuestion.tags.slice(0, 3).map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -564,135 +511,8 @@ const CertiFlash: React.FC = () => {
                 </Card>
               </div>
             )}
-          </TabsContent>
-
-          {/* Page de profil */}
-          <TabsContent value="profile" className="space-y-6">
-            <div className="max-w-2xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Trophy className="h-6 w-6 text-yellow-500" />
-                    <span>Votre Profil</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <Star className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-blue-700">{userData.xp}</div>
-                      <div className="text-sm text-blue-600">XP Total</div>
-                    </div>
-                    <div className="text-center p-4 bg-orange-50 rounded-lg">
-                      <Flame className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-orange-700">{userData.streak}</div>
-                      <div className="text-sm text-orange-600">Jours de Suite</div>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <Zap className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-green-700">{userData.tokens}</div>
-                      <div className="text-sm text-green-600">Jetons</div>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <Award className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <div className="text-2xl font-bold text-purple-700">{userData.level}</div>
-                      <div className="text-sm text-purple-600">Niveau</div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3">Progression vers le niveau suivant</h3>
-                    <Progress value={(userData.xp % 100)} className="h-3" />
-                    <p className="text-sm text-gray-600 mt-2">
-                      {userData.xp % 100} / 100 XP vers le niveau {userData.level + 1}
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3">Badges Obtenus</h3>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <div className="text-2xl mb-2">🎯</div>
-                        <div className="text-sm font-medium">Premier XP</div>
-                      </div>
-                      {userData.streak >= 7 && (
-                        <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                          <div className="text-2xl mb-2">🔥</div>
-                          <div className="text-sm font-medium">Série de 7 jours</div>
-                        </div>
-                      )}
-                      {userData.level >= 5 && (
-                        <div className="text-center p-4 bg-blue-50 rounded-lg">
-                          <div className="text-2xl mb-2">🚀</div>
-                          <div className="text-sm font-medium">Expert AWS</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Page de classement */}
-          <TabsContent value="leaderboard" className="space-y-6">
-            <div className="max-w-2xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Award className="h-6 w-6 text-yellow-500" />
-                    <span>Classement Hebdomadaire</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Utilisateur actuel */}
-                    <div className="flex items-center space-x-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-                      <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold">
-                        1
-                      </div>
-                      <Avatar>
-                        <AvatarFallback className="bg-blue-500 text-white">Vous</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="font-semibold">Vous</div>
-                        <div className="text-sm text-gray-600">Niveau {userData.level}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-blue-600">{userData.xp} XP</div>
-                        <div className="text-sm text-gray-500">Cette semaine</div>
-                      </div>
-                    </div>
-                    
-                    {/* Utilisateurs fictifs pour la démonstration */}
-                    {[
-                      { name: 'Alice M.', level: userData.level - 1, xp: Math.max(0, userData.xp - 50) },
-                      { name: 'Bob K.', level: userData.level - 1, xp: Math.max(0, userData.xp - 80) },
-                      { name: 'Sarah L.', level: userData.level - 2, xp: Math.max(0, userData.xp - 120) }
-                    ].map((user, index) => (
-                      <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                        <div className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white rounded-full flex items-center justify-center font-bold">
-                          {index + 2}
-                        </div>
-                        <Avatar>
-                          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="font-semibold">{user.name}</div>
-                          <div className="text-sm text-gray-600">Niveau {user.level}</div>
-                        </div>
-                        <div className="text-right">
-                          <div className="font-bold">{user.xp} XP</div>
-                          <div className="text-sm text-gray-500">Cette semaine</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+        )}
       </div>
     </div>
   );
