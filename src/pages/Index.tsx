@@ -281,7 +281,12 @@ const CertiFlash: React.FC = () => {
   const submitAnswer = () => {
     if (!currentQuestion || !selectedAnswer.trim()) return;
     
-    const correct = selectedAnswer.toLowerCase().trim() === currentQuestion.correctAnswer.toLowerCase().trim();
+    // Fix the TypeScript error by ensuring we handle both string and string[] cases
+    const correctAnswerStr = Array.isArray(currentQuestion.correctAnswer) 
+      ? currentQuestion.correctAnswer[0] 
+      : currentQuestion.correctAnswer;
+    
+    const correct = selectedAnswer.toLowerCase().trim() === correctAnswerStr.toLowerCase().trim();
     setIsCorrect(correct);
     setShowResult(true);
     
