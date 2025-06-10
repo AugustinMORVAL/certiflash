@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
@@ -11,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Trophy, Flame, Zap, Target, BookOpen, Award, Star, CheckCircle, XCircle, Play, Home, ArrowLeft } from 'lucide-react';
 import HomePage from '@/components/HomePage';
+import QuizPage from '@/components/QuizPage';
 import { awsMLModules, awsMLQuestions, type Question, type Module } from '@/data/awsMLQuestions';
 
 // Configuration Firebase et variables globales
@@ -54,6 +54,8 @@ const CertiFlash: React.FC = () => {
   const [currentModule, setCurrentModule] = useState<Module | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [quizQuestions, setQuizQuestions] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
   const [showResult, setShowResult] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
@@ -172,23 +174,24 @@ const CertiFlash: React.FC = () => {
 
   // Démarrer un module
   const startModule = (module: Module) => {
-    console.log('Démarrage du module:', module.id);
     setCurrentModule(module);
     setActiveTab('practice');
-    
-    // Filtrer les questions du module
-    const moduleQuestions = questions.filter(q => q.moduleId === module.id);
-    console.log('Questions trouvées pour le module:', moduleQuestions.length);
-    
-    if (moduleQuestions.length > 0) {
-      // Sélectionner une question aléatoire ou la première
-      const randomQuestion = moduleQuestions[Math.floor(Math.random() * moduleQuestions.length)];
-      console.log('Question sélectionnée:', randomQuestion);
-      setCurrentQuestion(randomQuestion);
+
+    // Always fallback to local data if questions is empty
+    const sourceQuestions = questions.length > 0 ? questions : awsMLQuestions;
+    const moduleQuestions = sourceQuestions.filter(q => q.moduleId === module.id);
+    const shuffledQuestions = [...moduleQuestions].sort(() => 0.5 - Math.random());
+    const selectedQuestions = shuffledQuestions.slice(0, 5);
+
+    if (selectedQuestions.length > 0) {
+      setQuizQuestions(selectedQuestions);
+      setCurrentQuestion(selectedQuestions[0]);
+      setCurrentQuestionIndex(0);
       setSelectedAnswer('');
       setShowResult(false);
     } else {
-      console.warn('Aucune question trouvée pour ce module');
+      setQuizQuestions([]);
+      setCurrentQuestion(null);
     }
   };
 
@@ -247,14 +250,18 @@ const CertiFlash: React.FC = () => {
 
   // Question suivante
   const nextQuestion = () => {
-    if (!currentModule) return;
-    
-    const moduleQuestions = questions.filter(q => q.moduleId === currentModule.id);
-    const randomQuestion = moduleQuestions[Math.floor(Math.random() * moduleQuestions.length)];
-    
-    setCurrentQuestion(randomQuestion);
-    setSelectedAnswer('');
     setShowResult(false);
+    setSelectedAnswer('');
+
+    if (currentQuestionIndex < quizQuestions.length - 1) {
+      const nextIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(nextIndex);
+      setCurrentQuestion(quizQuestions[nextIndex]);
+    } else {
+      // Le quiz est terminé
+      console.log('Quiz terminé!');
+      goToModules(); // Pour l'instant, retourne aux modules
+    }
   };
 
   // Rendu de l'écran de chargement
@@ -394,131 +401,36 @@ const CertiFlash: React.FC = () => {
         )}
 
         {activeTab === 'practice' && (
-          <div className="space-y-6">
-            {!currentQuestion ? (
+          <>
+            {currentQuestion && quizQuestions.length > 0 ? (
+              <QuizPage
+                question={currentQuestion}
+                quizProgress={currentQuestionIndex}
+                totalQuestions={quizQuestions.length}
+                selectedAnswer={selectedAnswer}
+                onSelectAnswer={setSelectedAnswer}
+                onSubmitAnswer={submitAnswer}
+                onNextQuestion={nextQuestion}
+                showResult={showResult}
+                isCorrect={isCorrect}
+              />
+            ) : (
               <div className="text-center py-12">
                 <Target className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-2xl font-semibold text-gray-700 mb-2">Choisissez un module</h2>
-                <p className="text-gray-500">Sélectionnez un module pour commencer à pratiquer</p>
-                <Button onClick={goToModules} className="mt-4">
-                  Voir les modules
-                </Button>
-              </div>
-            ) : (
-              <div className="max-w-2xl mx-auto">
-                <Card className="mb-6">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <Badge variant="outline">{currentModule?.title}</Badge>
-                      <Badge variant={currentQuestion.difficulty === 'hard' ? 'destructive' : currentQuestion.difficulty === 'medium' ? 'default' : 'secondary'}>
-                        {currentQuestion.difficulty}
-                      </Badge>
-                    </div>
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {currentQuestion.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="outline" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <h2 className="text-xl font-semibold">{currentQuestion.question}</h2>
-                    
-                    {currentQuestion.type === 'mcq' && (
-                      <div className="space-y-3">
-                        {currentQuestion.options?.map((option, index) => (
-                          <Button
-                            key={index}
-                            variant={selectedAnswer === option ? 'default' : 'outline'}
-                            className="w-full justify-start p-4 h-auto"
-                            onClick={() => setSelectedAnswer(option)}
-                            disabled={showResult}
-                          >
-                            <span className="mr-3 font-semibold">{String.fromCharCode(65 + index)}.</span>
-                            {option}
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-                    
-                    {currentQuestion.type === 'trueFalse' && (
-                      <div className="flex space-x-4">
-                        <Button
-                          variant={selectedAnswer === 'Vrai' ? 'default' : 'outline'}
-                          className="flex-1"
-                          onClick={() => setSelectedAnswer('Vrai')}
-                          disabled={showResult}
-                        >
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          Vrai
-                        </Button>
-                        <Button
-                          variant={selectedAnswer === 'Faux' ? 'default' : 'outline'}
-                          className="flex-1"
-                          onClick={() => setSelectedAnswer('Faux')}
-                          disabled={showResult}
-                        >
-                          <XCircle className="h-4 w-4 mr-2" />
-                          Faux
-                        </Button>
-                      </div>
-                    )}
-                    
-                    {currentQuestion.type === 'fillBlank' && (
-                      <div className="space-y-3">
-                        <input
-                          type="text"
-                          value={selectedAnswer}
-                          onChange={(e) => setSelectedAnswer(e.target.value)}
-                          placeholder="Tapez votre réponse..."
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          disabled={showResult}
-                        />
-                      </div>
-                    )}
-                    
-                    {showResult && (
-                      <div className={`p-4 rounded-lg ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
-                        <div className="flex items-center space-x-2 mb-2">
-                          {isCorrect ? (
-                            <CheckCircle className="h-5 w-5 text-green-600" />
-                          ) : (
-                            <XCircle className="h-5 w-5 text-red-600" />
-                          )}
-                          <span className={`font-semibold ${isCorrect ? 'text-green-800' : 'text-red-800'}`}>
-                            {isCorrect ? 'Correct !' : 'Incorrect'}
-                          </span>
-                        </div>
-                        <p className="text-gray-700">{currentQuestion.explanation}</p>
-                        {isCorrect && (
-                          <p className="text-sm text-green-600 mt-2">
-                            +{currentQuestion.difficulty === 'hard' ? 15 : currentQuestion.difficulty === 'medium' ? 10 : 5} XP, +1 jeton
-                          </p>
-                        )}
-                      </div>
-                    )}
-                    
-                    <div className="flex space-x-3">
-                      {!showResult ? (
-                        <Button 
-                          onClick={submitAnswer} 
-                          disabled={!selectedAnswer.trim()}
-                          className="flex-1"
-                        >
-                          Valider
-                        </Button>
-                      ) : (
-                        <Button onClick={nextQuestion} className="flex-1">
-                          Question suivante
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+                  {currentModule ? "Chargement des questions..." : "Choisissez un module"}
+                </h2>
+                <p className="text-gray-500">
+                    {currentModule ? "Préparation de votre session de révision." : "Sélectionnez un module pour commencer à pratiquer"}
+                </p>
+                {!currentModule && (
+                    <Button onClick={goToModules} className="mt-4">
+                        Voir les modules
+                    </Button>
+                )}
               </div>
             )}
-          </div>
+          </>
         )}
       </div>
     </div>
