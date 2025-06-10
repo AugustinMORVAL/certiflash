@@ -12,6 +12,15 @@ import { Trophy, Flame, Zap, Target, BookOpen, Award, Star, CheckCircle, XCircle
 import HomePage from '@/components/HomePage';
 import QuizPage from '@/components/QuizPage';
 import { awsMLModules, awsMLQuestions, type Question, type Module } from '@/data/awsMLQuestions';
+import {
+  awsMLSageMakerQuestions,
+  awsMLDataStorageQuestions,
+  awsMLComputeQuestions,
+  awsMLAIServicesQuestions,
+  awsMLSecurityQuestions,
+  awsMLConceptsQuestions,
+  awsMLAdvancedQuestions
+} from '@/data/awsMLQuestions';
 
 // Configuration Firebase et variables globales
 const appId = typeof window !== 'undefined' && (window as any).__app_id ? (window as any).__app_id : 'certiflash-demo';
@@ -172,14 +181,55 @@ const CertiFlash: React.FC = () => {
     }
   };
 
+  const getQuestionsForModule = (moduleId: string): Question[] => {
+    switch (moduleId) {
+      case 'sagemaker-core':
+        return [
+          ...awsMLSageMakerQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'sagemaker-core')
+        ];
+      case 'data-storage':
+        return [
+          ...awsMLDataStorageQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'data-storage')
+        ];
+      case 'compute':
+        return [
+          ...awsMLComputeQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'compute')
+        ];
+      case 'ai-services':
+        return [
+          ...awsMLAIServicesQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'ai-services')
+        ];
+      case 'mlops-security':
+        return [
+          ...awsMLSecurityQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'mlops-security')
+        ];
+      case 'ml-concepts':
+        return [
+          ...awsMLConceptsQuestions,
+          ...awsMLQuestions.filter(q => q.moduleId === 'ml-concepts')
+        ];
+      case 'expert-aws-ml':
+        return [
+          ...awsMLAdvancedQuestions
+        ];
+      default:
+        // fallback: all questions for this moduleId
+        return awsMLQuestions.filter(q => q.moduleId === moduleId);
+    }
+  };
+
   // Démarrer un module
   const startModule = (module: Module) => {
     setCurrentModule(module);
     setActiveTab('practice');
 
-    // Always fallback to local data if questions is empty
-    const sourceQuestions = questions.length > 0 ? questions : awsMLQuestions;
-    const moduleQuestions = sourceQuestions.filter(q => q.moduleId === module.id);
+    // Use the new function to get all questions for the selected module/category
+    const moduleQuestions = getQuestionsForModule(module.id);
     const shuffledQuestions = [...moduleQuestions].sort(() => 0.5 - Math.random());
     const selectedQuestions = shuffledQuestions.slice(0, 5);
 
@@ -373,7 +423,6 @@ const CertiFlash: React.FC = () => {
                     </div>
                     <Button 
                       onClick={() => startModule(module)}
-                      disabled={userData.xp < module.requiredXP}
                       className="w-full group-hover:scale-105 transition-transform"
                     >
                       <Play className="h-4 w-4 mr-2" />
