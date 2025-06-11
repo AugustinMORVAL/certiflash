@@ -116,9 +116,9 @@ const QuizPage: React.FC<QuizPageProps> = ({
             <Badge variant={question.difficulty === 'hard' ? 'destructive' : question.difficulty === 'medium' ? 'default' : 'secondary'}>
                 {question.difficulty}
             </Badge>
-            {question.tags.map(tag => (
+            {/* {question.tags.map(tag => (
                 <Badge key={tag} variant="outline">{tag}</Badge>
-            ))}
+            ))} */}
         </div>
       </div>
 
