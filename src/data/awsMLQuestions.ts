@@ -8,7 +8,6 @@ export interface Question {
   difficulty: 'easy' | 'medium' | 'hard';
   moduleId: string;
   category: string;
-  tags: string[];
 }
 
 export interface Module {
@@ -45,7 +44,7 @@ export const awsMLModules: Module[] = [
   },
   {
     id: 'ai-services',
-    title: 'Services IA de High Level',
+    title: 'Services IA High Level',
     description: 'Rekognition, Comprehend, Textract, Translate, Polly, Transcribe',
     icon: '🧠',
     questionsCount: 18,
@@ -86,8 +85,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker est la plateforme ML complète d\'AWS qui couvre tout le cycle de vie du machine learning, de la préparation des données au déploiement.',
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['platform', 'machine-learning', 'managed-service']
+    category: 'SageMaker'
   },
   {
     id: 'sm-core-2',
@@ -98,8 +96,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Ground Truth est un service d\'étiquetage de données pour créer des jeux de données d\'entraînement de haute qualité, pas de déploiement.',
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['ground-truth', 'data-labeling']
+    category: 'SageMaker'
   },
   {
     id: 'sm-core-3',
@@ -110,8 +107,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Studio est l\'environnement de développement intégré (IDE) web qui unifie tous les outils pour le machine learning.',
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['studio', 'ide', 'development']
+    category: 'SageMaker'
   },
   {
     id: 'sm-core-4',
@@ -122,8 +118,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Hyperparameter Tuning (HPO) optimise automatiquement les hyperparamètres du modèle pour améliorer les performances.',
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Training',
-    tags: ['hyperparameters', 'optimization', 'hpo']
+    category: 'Training'
   },
   {
     id: 'sm-core-5',
@@ -134,8 +129,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Les Real-time Endpoints sont conçus pour des prédictions en temps réel avec une faible latence et un haut débit.',
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Inference',
-    tags: ['real-time', 'endpoints', 'latency']
+    category: 'Inference'
   },
 
   // Data Storage Questions
@@ -148,8 +142,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon S3 (Simple Storage Service) est le service de stockage d\'objets de référence d\'AWS pour tous types de données.',
     difficulty: 'easy',
     moduleId: 'data-storage',
-    category: 'Storage',
-    tags: ['s3', 'object-storage', 'data']
+    category: 'Storage'
   },
   {
     id: 'data-2',
@@ -160,8 +153,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'AWS Glue est le service ETL (Extract, Transform, Load) entièrement géré d\'AWS pour la préparation et transformation des données.',
     difficulty: 'easy',
     moduleId: 'data-storage',
-    category: 'ETL',
-    tags: ['glue', 'etl', 'data-preparation']
+    category: 'ETL'
   },
   {
     id: 'data-3',
@@ -172,8 +164,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Athena est un service de requêtage interactif qui permet d\'analyser des données dans S3 en utilisant SQL standard.',
     difficulty: 'easy',
     moduleId: 'data-storage',
-    category: 'Analytics',
-    tags: ['athena', 'sql', 's3', 'query']
+    category: 'Analytics'
   },
   {
     id: 'data-4',
@@ -184,8 +175,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Kinesis Data Streams est conçu pour l\'ingestion de flux de données en temps réel avec une faible latence.',
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'Streaming',
-    tags: ['kinesis', 'streaming', 'real-time', 'ingestion']
+    category: 'Streaming'
   },
   {
     id: 'data-5',
@@ -196,8 +186,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'AWS Lake Formation facilite la configuration d\'un lac de données sécurisé en quelques jours au lieu de plusieurs mois.',
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'Data Lake',
-    tags: ['lake-formation', 'data-lake', 'security']
+    category: 'Data Lake'
   },
 
   // AI Services Questions
@@ -210,8 +199,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Rekognition analyse les images et vidéos pour détecter objets, personnes, texte, scènes et activités.',
     difficulty: 'easy',
     moduleId: 'ai-services',
-    category: 'Vision',
-    tags: ['rekognition', 'computer-vision', 'image-analysis']
+    category: 'Vision'
   },
   {
     id: 'ai-2',
@@ -222,8 +210,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Comprehend est le service NLP d\'AWS qui effectue l\'analyse de sentiments, l\'extraction d\'entités et la détection de langue.',
     difficulty: 'medium',
     moduleId: 'ai-services',
-    category: 'NLP',
-    tags: ['comprehend', 'nlp', 'sentiment-analysis']
+    category: 'NLP'
   },
   {
     id: 'ai-3',
@@ -234,8 +221,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Polly convertit le texte en parole (synthèse vocale). Amazon Transcribe convertit la parole en texte.',
     difficulty: 'easy',
     moduleId: 'ai-services',
-    category: 'Speech',
-    tags: ['polly', 'text-to-speech', 'transcribe']
+    category: 'Speech'
   },
   {
     id: 'ai-4',
@@ -246,8 +232,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Textract utilise l\'apprentissage automatique pour extraire du texte et des données de documents numérisés.',
     difficulty: 'medium',
     moduleId: 'ai-services',
-    category: 'Vision',
-    tags: ['textract', 'ocr', 'document-analysis']
+    category: 'Vision'
   },
   {
     id: 'ai-5',
@@ -258,8 +243,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Amazon Personalize crée des systèmes de recommandation personnalisés basés sur l\'apprentissage automatique.',
     difficulty: 'medium',
     moduleId: 'ai-services',
-    category: 'Recommendations',
-    tags: ['personalize', 'recommendations', 'personalization']
+    category: 'Recommendations'
   },
 
   // MLOps & Security Questions
@@ -272,8 +256,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'AWS IAM (Identity and Access Management) gère l\'authentification et l\'autorisation pour contrôler l\'accès aux ressources AWS.',
     difficulty: 'easy',
     moduleId: 'mlops-security',
-    category: 'Security',
-    tags: ['iam', 'access-control', 'permissions']
+    category: 'Security'
   },
   {
     id: 'mlops-2',
@@ -284,8 +267,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Model Monitor surveille automatiquement les modèles pour détecter la dérive des données et la dégradation de la qualité.',
     difficulty: 'medium',
     moduleId: 'mlops-security',
-    category: 'Monitoring',
-    tags: ['model-monitor', 'data-drift', 'model-quality']
+    category: 'Monitoring'
   },
   {
     id: 'mlops-3',
@@ -296,8 +278,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'AWS CloudTrail enregistre tous les appels d\'API AWS, permettant l\'audit, la sécurité et le dépannage.',
     difficulty: 'easy',
     moduleId: 'mlops-security',
-    category: 'Monitoring',
-    tags: ['cloudtrail', 'audit', 'api-logging']
+    category: 'Monitoring'
   },
   {
     id: 'mlops-4',
@@ -308,8 +289,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Pipelines est spécialement conçu pour orchestrer et automatiser les workflows de machine learning.',
     difficulty: 'medium',
     moduleId: 'mlops-security',
-    category: 'MLOps',
-    tags: ['pipelines', 'workflow', 'automation', 'ci-cd']
+    category: 'MLOps'
   },
   {
     id: 'mlops-5',
@@ -320,8 +300,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Clarify détecte les biais dans les données et les modèles, et fournit l\'explicabilité des prédictions avec SHAP.',
     difficulty: 'hard',
     moduleId: 'mlops-security',
-    category: 'MLOps',
-    tags: ['clarify', 'bias-detection', 'explainability', 'shap']
+    category: 'MLOps'
   },
 
   // Advanced Questions
@@ -334,8 +313,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Serverless Inference est pay-as-you-go et ideal pour les charges de travail intermittentes car il n\'y a pas de coûts quand il n\'y a pas de trafic.',
     difficulty: 'hard',
     moduleId: 'sagemaker-core',
-    category: 'Inference',
-    tags: ['serverless', 'cost-optimization', 'intermittent-workloads']
+    category: 'Inference'
   },
   {
     id: 'advanced-2',
@@ -346,8 +324,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'Les Multi-Model Endpoints (MME) permettent d\'héberger jusqu\'à des milliers de modèles sur un seul point de terminaison, réduisant les coûts d\'hébergement.',
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Inference',
-    tags: ['multi-model-endpoints', 'cost-optimization', 'model-hosting']
+    category: 'Inference'
   },
   {
     id: 'advanced-3',
@@ -358,8 +335,7 @@ export const awsMLQuestions: Question[] = [
     explanation: 'SageMaker Feature Store centralise le stockage des caractéristiques pour l\'entraînement et l\'inférence, évitant la duplication et assurant la cohérence.',
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['feature-store', 'feature-management', 'ml-pipeline']
+    category: 'SageMaker'
   }
 ];
 
@@ -374,8 +350,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "SageMaker Studio est l'IDE web unifié pour le développement, l'entraînement et le déploiement de modèles ML.",
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['studio', 'ide', 'ml-lifecycle']
+    category: 'SageMaker'
   },
   {
     id: 'sm-groundtruth-1',
@@ -386,8 +361,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Ground Truth permet l'étiquetage de données par des humains ou via des workflows automatiques.",
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['ground-truth', 'data-labeling']
+    category: 'SageMaker'
   },
   {
     id: 'sm-featurestore-1',
@@ -398,8 +372,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "SageMaker Feature Store centralise la gestion des features pour la cohérence entre entraînement et inférence.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['feature-store', 'feature-management']
+    category: 'SageMaker'
   },
   {
     id: 'sm-hpo-1',
@@ -410,8 +383,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Hyperparameter Tuning automatise la recherche des meilleurs hyperparamètres pour un modèle.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['hpo', 'hyperparameters']
+    category: 'SageMaker'
   },
   {
     id: 'sm-inference-1',
@@ -422,8 +394,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Les Real-time Endpoints sont conçus pour des prédictions en temps réel avec une faible latence.",
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'Inference',
-    tags: ['real-time', 'endpoints', 'latency']
+    category: 'Inference'
   },
   {
     id: 'sm-serverless-1',
@@ -434,8 +405,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Serverless Inference facture uniquement à l'utilisation et n'a pas de coût à l'arrêt.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Inference',
-    tags: ['serverless', 'cost-optimization']
+    category: 'Inference'
   },
   {
     id: 'sm-pipelines-1',
@@ -446,8 +416,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "SageMaker Pipelines permet d'automatiser et d'orchestrer les étapes du cycle de vie ML.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'MLOps',
-    tags: ['pipelines', 'ci-cd', 'workflow']
+    category: 'MLOps'
   },
   {
     id: 'sm-monitor-1',
@@ -458,8 +427,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Model Monitor détecte la dérive des données et la dégradation des performances des modèles.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Monitoring',
-    tags: ['model-monitor', 'data-drift', 'monitoring']
+    category: 'Monitoring'
   },
   {
     id: 'sm-clarify-1',
@@ -470,8 +438,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "Clarify détecte les biais et fournit l'explicabilité via SHAP.",
     difficulty: 'medium',
     moduleId: 'sagemaker-core',
-    category: 'Explainability',
-    tags: ['clarify', 'bias', 'explainability']
+    category: 'Explainability'
   },
   {
     id: 'sm-jumpstart-1',
@@ -482,8 +449,7 @@ export const awsMLSageMakerQuestions: Question[] = [
     explanation: "JumpStart accélère le prototypage avec des modèles et notebooks prêts à l'emploi.",
     difficulty: 'easy',
     moduleId: 'sagemaker-core',
-    category: 'SageMaker',
-    tags: ['jumpstart', 'pretrained', 'solutions']
+    category: 'SageMaker'
   },
 ];
 
@@ -498,8 +464,7 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "S3 est le service de stockage d'objets de référence pour les données ML.",
     difficulty: 'easy',
     moduleId: 'data-storage',
-    category: 'Storage',
-    tags: ['s3', 'object-storage']
+    category: 'Storage'
   },
   {
     id: 'ds-glue-1',
@@ -510,8 +475,7 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "Glue est le service ETL géré pour la préparation et la transformation des données.",
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'ETL',
-    tags: ['glue', 'etl', 'data-preparation']
+    category: 'ETL'
   },
   {
     id: 'ds-athena-1',
@@ -522,9 +486,9 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "Athena permet d'analyser les données S3 en SQL sans serveur.",
     difficulty: 'easy',
     moduleId: 'data-storage',
-    category: 'Analytics',
-    tags: ['athena', 'sql', 'analytics']
+    category: 'Analytics'
   },
+
   {
     id: 'ds-redshift-1',
     type: 'mcq',
@@ -534,9 +498,9 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "Redshift est l'entrepôt de données pour l'analyse à grande échelle.",
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'Data Warehouse',
-    tags: ['redshift', 'data-warehouse']
+    category: 'Data Warehouse'
   },
+
   {
     id: 'ds-kinesis-1',
     type: 'mcq',
@@ -546,9 +510,9 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "Kinesis Data Streams est conçu pour l'ingestion de flux de données en temps réel.",
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'Streaming',
-    tags: ['kinesis', 'streaming']
+    category: 'Streaming'
   },
+
   {
     id: 'ds-dynamodb-1',
     type: 'trueFalse',
@@ -558,8 +522,7 @@ export const awsMLDataStorageQuestions: Question[] = [
     explanation: "DynamoDB offre une faible latence pour le stockage clé-valeur et document.",
     difficulty: 'medium',
     moduleId: 'data-storage',
-    category: 'NoSQL',
-    tags: ['dynamodb', 'nosql']
+    category: 'NoSQL'
   },
 ];
 
@@ -574,8 +537,7 @@ export const awsMLComputeQuestions: Question[] = [
     explanation: "EC2 permet de choisir des instances adaptées au ML, mais SageMaker est souvent préféré.",
     difficulty: 'medium',
     moduleId: 'compute',
-    category: 'Compute',
-    tags: ['ec2', 'gpu', 'cpu']
+    category: 'Compute'
   },
   {
     id: 'cc-lambda-1',
@@ -586,8 +548,7 @@ export const awsMLComputeQuestions: Question[] = [
     explanation: "Lambda est utile pour l'automatisation et le calcul événementiel dans les workflows ML.",
     difficulty: 'easy',
     moduleId: 'compute',
-    category: 'Serverless',
-    tags: ['lambda', 'serverless']
+    category: 'Serverless'
   },
   {
     id: 'cc-ecr-1',
@@ -598,8 +559,7 @@ export const awsMLComputeQuestions: Question[] = [
     explanation: "ECR est le registre de conteneurs Docker pour AWS.",
     difficulty: 'medium',
     moduleId: 'compute',
-    category: 'Containers',
-    tags: ['ecr', 'docker', 'containers']
+    category: 'Containers'
   },
 ];
 
@@ -614,8 +574,7 @@ export const awsMLAIServicesQuestions: Question[] = [
     explanation: "Rekognition fournit des API pour l'analyse d'images et vidéos.",
     difficulty: 'easy',
     moduleId: 'ai-services',
-    category: 'Vision',
-    tags: ['rekognition', 'vision']
+    category: 'Vision'
   },
   {
     id: 'ai-comprehend-1',
@@ -626,8 +585,7 @@ export const awsMLAIServicesQuestions: Question[] = [
     explanation: "Comprehend est le service NLP d'AWS.",
     difficulty: 'medium',
     moduleId: 'ai-services',
-    category: 'NLP',
-    tags: ['comprehend', 'nlp']
+    category: 'NLP'
   },
   {
     id: 'ai-translate-1',
@@ -638,8 +596,7 @@ export const awsMLAIServicesQuestions: Question[] = [
     explanation: "Translate fournit des API de traduction multilingue.",
     difficulty: 'easy',
     moduleId: 'ai-services',
-    category: 'Translation',
-    tags: ['translate', 'translation']
+    category: 'Translation'
   },
   {
     id: 'ai-polly-1',
@@ -650,8 +607,7 @@ export const awsMLAIServicesQuestions: Question[] = [
     explanation: "Polly synthétise la parole à partir de texte.",
     difficulty: 'easy',
     moduleId: 'ai-services',
-    category: 'Speech',
-    tags: ['polly', 'speech']
+    category: 'Speech'
   },
   {
     id: 'ai-forecast-1',
@@ -662,8 +618,7 @@ export const awsMLAIServicesQuestions: Question[] = [
     explanation: "Forecast permet la prévision de séries temporelles avec ML.",
     difficulty: 'medium',
     moduleId: 'ai-services',
-    category: 'Forecast',
-    tags: ['forecast', 'time-series']
+    category: 'Forecast'
   },
 ];
 
@@ -678,8 +633,7 @@ export const awsMLSecurityQuestions: Question[] = [
     explanation: "IAM contrôle l'accès aux ressources AWS.",
     difficulty: 'easy',
     moduleId: 'mlops-security',
-    category: 'Security',
-    tags: ['iam', 'security']
+    category: 'Security'
   },
   {
     id: 'sec-kms-1',
@@ -690,8 +644,7 @@ export const awsMLSecurityQuestions: Question[] = [
     explanation: "KMS gère les clés de chiffrement pour la sécurité des données.",
     difficulty: 'medium',
     moduleId: 'mlops-security',
-    category: 'Security',
-    tags: ['kms', 'encryption']
+    category: 'Security'
   },
   {
     id: 'sec-cloudwatch-1',
@@ -702,8 +655,7 @@ export const awsMLSecurityQuestions: Question[] = [
     explanation: "CloudWatch collecte et surveille les métriques et logs AWS.",
     difficulty: 'medium',
     moduleId: 'mlops-security',
-    category: 'Monitoring',
-    tags: ['cloudwatch', 'monitoring']
+    category: 'Monitoring'
   },
   {
     id: 'sec-cloudtrail-1',
@@ -714,8 +666,7 @@ export const awsMLSecurityQuestions: Question[] = [
     explanation: "CloudTrail permet l'audit et la traçabilité des actions AWS.",
     difficulty: 'easy',
     moduleId: 'mlops-security',
-    category: 'Audit',
-    tags: ['cloudtrail', 'audit']
+    category: 'Audit'
   },
   {
     id: 'sec-stepfunctions-1',
@@ -726,8 +677,7 @@ export const awsMLSecurityQuestions: Question[] = [
     explanation: "Step Functions orchestre des workflows impliquant plusieurs services AWS.",
     difficulty: 'medium',
     moduleId: 'mlops-security',
-    category: 'Orchestration',
-    tags: ['step-functions', 'orchestration']
+    category: 'Orchestration'
   },
 ];
 
@@ -742,8 +692,7 @@ export const awsMLConceptsQuestions: Question[] = [
     explanation: "L'apprentissage supervisé utilise des données annotées pour entraîner un modèle.",
     difficulty: 'easy',
     moduleId: 'ml-concepts',
-    category: 'ML Concepts',
-    tags: ['supervised', 'learning-type']
+    category: 'ML Concepts'
   },
   {
     id: 'mlc-featureeng-1',
@@ -754,8 +703,7 @@ export const awsMLConceptsQuestions: Question[] = [
     explanation: "Le one-hot encoding transforme chaque catégorie en une colonne binaire.",
     difficulty: 'medium',
     moduleId: 'ml-concepts',
-    category: 'Feature Engineering',
-    tags: ['feature-engineering', 'encoding']
+    category: 'Feature Engineering'
   },
   {
     id: 'mlc-overfit-1',
@@ -766,8 +714,7 @@ export const awsMLConceptsQuestions: Question[] = [
     explanation: "L'overfitting signifie que le modèle s'adapte trop aux données d'entraînement.",
     difficulty: 'medium',
     moduleId: 'ml-concepts',
-    category: 'Model Evaluation',
-    tags: ['overfitting', 'evaluation']
+    category: 'Model Evaluation'
   },
   {
     id: 'mlc-metrics-1',
@@ -778,8 +725,7 @@ export const awsMLConceptsQuestions: Question[] = [
     explanation: "AUC-ROC mesure la capacité du modèle à distinguer les classes.",
     difficulty: 'medium',
     moduleId: 'ml-concepts',
-    category: 'Model Evaluation',
-    tags: ['metrics', 'classification']
+    category: 'Model Evaluation'
   },
   {
     id: 'mlc-hpo-1',
@@ -790,8 +736,7 @@ export const awsMLConceptsQuestions: Question[] = [
     explanation: "Le grid search teste systématiquement toutes les combinaisons d'hyperparamètres.",
     difficulty: 'medium',
     moduleId: 'ml-concepts',
-    category: 'Hyperparameter Tuning',
-    tags: ['hpo', 'grid-search']
+    category: 'Hyperparameter Tuning'
   },
 ];
 
@@ -811,8 +756,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Les logs CloudWatch fournissent des informations détaillées sur les erreurs et l'exécution de chaque étape du pipeline.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['sagemaker', 'debug', 'cloudwatch', 'pipelines']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-vpc-endpoint',
@@ -823,8 +767,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Les VPC endpoints permettent de garder le trafic réseau privé et sécurisé entre vos ressources AWS.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['vpc', 'security', 'networking']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-cost-optimization',
@@ -840,8 +783,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Les instances Spot offrent des réductions de coût importantes pour les tâches non critiques.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['cost', 'spot', 'optimization']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-byo-container',
@@ -852,8 +794,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "BYOC (Bring Your Own Container) permet d'utiliser des conteneurs Docker personnalisés pour l'entraînement ou l'inférence.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['byoc', 'docker', 'custom-algorithm']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-multi-model-endpoint',
@@ -869,8 +810,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Les MME permettent d'héberger et de servir plusieurs modèles sur un même endpoint, optimisant ainsi les coûts d'infrastructure.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['mme', 'multi-model', 'cost']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-mlops-cicd',
@@ -886,8 +826,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "CodePipeline permet d'automatiser les workflows CI/CD pour les projets ML sur AWS.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['mlops', 'cicd', 'automation']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-data-leak',
@@ -898,8 +837,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "La fuite de données biaise l'évaluation du modèle et doit être évitée.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['data-leakage', 'evaluation']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-clarify-bias',
@@ -915,8 +853,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Clarify analyse les biais et fournit des rapports d'explicabilité.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['clarify', 'bias', 'explainability']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-spot-interruption',
@@ -932,8 +869,7 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "Les interruptions Spot nécessitent une gestion de la tolérance aux pannes dans les workflows ML.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['spot', 'interruption', 'fault-tolerance']
+    category: 'Expert AWS ML & Advanced Scenarios'
   },
   {
     id: 'adv-data-format',
@@ -944,9 +880,10 @@ export const awsMLAdvancedQuestions: Question[] = [
     explanation: "RecordIO-protobuf est optimisé pour les gros volumes de données et le streaming dans SageMaker.",
     difficulty: 'hard',
     moduleId: 'expert-aws-ml',
-    category: 'Expert AWS ML & Advanced Scenarios',
-    tags: ['data-format', 'recordio', 'sagemaker']
+    category: 'Expert AWS ML & Advanced Scenarios'
   }
 ];
 // --- END: Advanced/Expert AWS ML Questions ---
+
+
 
