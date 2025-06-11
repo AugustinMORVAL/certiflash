@@ -22,6 +22,7 @@ import {
   awsMLAdvancedQuestions
 } from '@/data/awsMLQuestions';
 import ProgressDashboard from '@/components/ProgressDashboard';
+import ModulesGrid from '@/components/ModulesGrid';
 
 // Configuration Firebase et variables globales
 const appId = typeof window !== 'undefined' && (window as any).__app_id ? (window as any).__app_id : 'certiflash-demo';
@@ -395,56 +396,22 @@ const CertiFlash: React.FC = () => {
           <div className="space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                AWS Machine Learning Certification
+                AWS Certified Machine Learning Engineer - Associate
               </h1>
               <p className="text-lg text-gray-600">
-                Maîtrisez tous les services AWS pour réussir votre certification MLS-C01
+                Maîtrisez tous les services AWS pour réussir votre certification MLA-C01
               </p>
             </div>
 
             {/* Add Progress Dashboard */}
             <ProgressDashboard userData={userData} onPracticeCategory={practiceCategory} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {awsMLModules.map((module, index) => (
-                <Card key={module.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div className={`p-3 rounded-lg ${module.color} text-white text-2xl w-fit`}>
-                        {module.icon}
-                      </div>
-                      {userData.xp >= module.requiredXP ? (
-                        <CheckCircle className="h-6 w-6 text-green-500" />
-                      ) : (
-                        <div className="text-sm text-gray-500">{module.requiredXP} XP requis</div>
-                      )}
-                    </div>
-                    <CardTitle className="text-lg">{module.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">{module.description}</p>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm text-gray-500">{module.questionsCount} questions</span>
-                      <Progress value={userData.completedModules.includes(module.id) ? 100 : 0} className="w-20" />
-                    </div>
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {module.categories.slice(0, 3).map((category) => (
-                        <Badge key={category} variant="secondary" className="text-xs">
-                          {category}
-                        </Badge>
-                      ))}
-                    </div>
-                    <Button 
-                      onClick={() => startModule(module)}
-                      className="w-full group-hover:scale-105 transition-transform"
-                    >
-                      <Play className="h-4 w-4 mr-2" />
-                      Commencer
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {/* Use the new ModulesGrid component */}
+            <ModulesGrid 
+              modules={awsMLModules} 
+              userData={userData} 
+              onStartModule={startModule} 
+            />
           </div>
         )}
 

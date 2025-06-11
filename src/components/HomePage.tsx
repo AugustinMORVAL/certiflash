@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,8 +28,8 @@ interface HomePageProps {
 const learningPaths: LearningPath[] = [
   {
     id: 'aws-ml',
-    title: 'AWS Machine Learning',
-    description: 'Maîtrisez la certification AWS MLS-C01 avec SageMaker, services d\'IA et MLOps',
+    title: 'AWS Machine Learning Engineer - Associate',
+    description: 'Maîtrisez la certification AWS Certified Machine Learning Engineer - Associate avec SageMaker, services d\'IA et MLOps',
     icon: '🤖',
     progress: 0,
     totalModules: 4,
