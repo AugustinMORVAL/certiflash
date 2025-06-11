@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,6 @@ interface CategoryProgress {
   totalQuestions: number;
   tags: string[];
   color: string;
-  planetSize: 'small' | 'medium' | 'large';
 }
 
 interface ProgressDashboardProps {
@@ -47,17 +45,12 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
         sum + (history as any).correct, 0);
       
       const mastery = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
-      
-      let planetSize: 'small' | 'medium' | 'large' = 'small';
-      if (mastery >= 75) planetSize = 'large';
-      else if (mastery >= 50) planetSize = 'medium';
 
       return {
         ...category,
         mastery,
         correctAnswers,
-        totalQuestions,
-        planetSize
+        totalQuestions
       };
     });
   };
@@ -76,17 +69,6 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
     .filter(cat => cat.mastery < 50)
     .sort((a, b) => a.mastery - b.mastery)
     .slice(0, 3);
-
-  const getPlanetClasses = (category: CategoryProgress) => {
-    const baseClasses = "rounded-full bg-gradient-to-br shadow-lg transition-all duration-500 hover:scale-110 cursor-pointer relative overflow-hidden";
-    const sizeClasses = {
-      small: "w-16 h-16",
-      medium: "w-20 h-20",
-      large: "w-24 h-24"
-    };
-    
-    return `${baseClasses} ${sizeClasses[category.planetSize]} ${category.color}`;
-  };
 
   const getMasteryMessage = (mastery: number) => {
     if (mastery >= 90) return "🌟 Expert Level!";
@@ -124,143 +106,29 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
         </Card>
       </div>
 
-      {/* Skill Galaxy */}
-      <Card className="overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
+      {/* Progress Bars Dashboard for All Categories */}
+      <Card className="mt-4">
         <CardHeader>
-          <CardTitle className="text-white text-center text-2xl">
-            🌌 Your AWS ML Knowledge Galaxy
-          </CardTitle>
-          <p className="text-gray-200 text-center">Each planet represents a skill area - watch them grow as you learn!</p>
+          <CardTitle className="text-lg font-semibold text-gray-800">Global Progression</CardTitle>
         </CardHeader>
-        <CardContent className="p-8">
-          <div className="relative min-h-96 flex flex-wrap justify-center items-center gap-8">
-            {/* Background stars */}
-            <div className="absolute inset-0">
-              {[...Array(20)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full animate-pulse"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 2}s`
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Planets */}
-            {categoryProgress.map((category, index) => (
-              <Dialog key={category.id}>
-                <DialogTrigger asChild>
-                  <div className="relative group">
-                    <div className={getPlanetClasses(category)}>
-                      {/* Planet glow effect */}
-                      <div className="absolute inset-0 rounded-full bg-white opacity-20 animate-pulse" />
-                      
-                      {/* Mastery indicator */}
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-white font-bold text-xs">
-                          {category.mastery}%
-                        </span>
-                      </div>
-
-                      {/* Planet rings for high mastery */}
-                      {category.mastery >= 75 && (
-                        <div className="absolute inset-0 rounded-full border-2 border-white opacity-50 animate-spin" 
-                             style={{ animationDuration: '10s' }} />
-                      )}
-                    </div>
-                    
-                    {/* Planet label */}
-                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                      <span className="text-white text-sm font-medium bg-black bg-opacity-50 px-2 py-1 rounded">
-                        {category.name}
-                      </span>
-                    </div>
-
-                    {/* Satellite for completed areas */}
-                    {category.mastery >= 90 && (
-                      <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full animate-bounce">
-                        <Star className="h-3 w-3 text-yellow-800 m-0.5" />
-                      </div>
-                    )}
-                  </div>
-                </DialogTrigger>
-
-                {/* Detailed Modal */}
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${category.color}`} />
-                      {category.name} - {getMasteryMessage(category.mastery)}
-                    </DialogTitle>
-                  </DialogHeader>
-                  
-                  <div className="space-y-6">
-                    {/* Progress Overview */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="text-2xl font-bold">{category.mastery}% Mastery</div>
-                        <div className="text-gray-600">
-                          {category.correctAnswers} / {category.totalQuestions} questions correct
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Progress value={category.mastery} className="w-32 mb-2" />
-                        <Badge variant={category.mastery >= 75 ? 'default' : 'secondary'}>
-                          {category.mastery >= 75 ? 'Mastered' : 'In Progress'}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div>
-                      <h4 className="font-semibold mb-2">Key Topics:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {category.tags.map(tag => (
-                          <Badge key={tag} variant="outline">{tag}</Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <Button 
-                        onClick={() => onPracticeCategory(category.id)}
-                        className="flex-1"
-                      >
-                        <BookOpen className="h-4 w-4 mr-2" />
-                        Practice This Area
-                      </Button>
-                      
-                      {category.mastery > 0 && (
-                        <Button variant="outline" className="flex-1">
-                          <RotateCcw className="h-4 w-4 mr-2" />
-                          Review Mistakes
-                        </Button>
-                      )}
-                    </div>
-
-                    {/* Motivational Message */}
-                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
-                      <p className="text-center text-gray-700">
-                        {category.mastery >= 90 && "🌟 Outstanding! You've mastered this area!"}
-                        {category.mastery >= 75 && category.mastery < 90 && "🚀 Almost perfect! Just a bit more practice!"}
-                        {category.mastery >= 50 && category.mastery < 75 && "📈 Great progress! Keep building your knowledge!"}
-                        {category.mastery < 50 && "🎯 Every expert was once a beginner. You've got this!"}
-                      </p>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+        <CardContent>
+          <div className="space-y-4">
+            {categoryProgress.map(cat => (
+              <div key={cat.id} className="flex flex-col md:flex-row md:items-center md:gap-4">
+                <div className="w-40 font-medium text-gray-700 mb-1 md:mb-0">{cat.name}</div>
+                <div className="flex-1 flex items-center gap-3">
+                  <Progress value={cat.mastery} className="flex-1 h-2" />
+                  <span className="w-12 text-right font-semibold text-gray-700">{cat.mastery}%</span>
+                </div>
+              </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Quick Insights */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Areas Overview - Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Strong Areas */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-green-600">
@@ -270,12 +138,42 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
           </CardHeader>
           <CardContent>
             {strongestAreas.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {strongestAreas.map(area => (
-                  <div key={area.id} className="flex items-center justify-between">
-                    <span className="font-medium">{area.name}</span>
-                    <Badge className="bg-green-100 text-green-800">{area.mastery}%</Badge>
-                  </div>
+                  <Dialog key={area.id}>
+                    <DialogTrigger asChild>
+                      <div className="flex items-center justify-between p-3 rounded-lg hover:bg-green-50 cursor-pointer transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${area.color}`} />
+                          <div>
+                            <div className="font-medium">{area.name}</div>
+                            <div className="text-sm text-gray-500">{area.correctAnswers}/{area.totalQuestions} questions</div>
+                          </div>
+                        </div>
+                        <Badge className="bg-green-100 text-green-800">{area.mastery}%</Badge>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{area.name} - {getMasteryMessage(area.mastery)}</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <Progress value={area.mastery} className="h-2" />
+                        <div className="flex flex-wrap gap-2">
+                          {area.tags.map(tag => (
+                            <Badge key={tag} variant="outline">{tag}</Badge>
+                          ))}
+                        </div>
+                        <Button 
+                          onClick={() => onPracticeCategory(area.id)}
+                          className="w-full"
+                        >
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Practice This Area
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 ))}
               </div>
             ) : (
@@ -286,6 +184,7 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
           </CardContent>
         </Card>
 
+        {/* Focus Areas */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-orange-600">
@@ -295,21 +194,54 @@ const ProgressDashboard: React.FC<ProgressDashboardProps> = ({ userData, onPract
           </CardHeader>
           <CardContent>
             {focusAreas.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {focusAreas.map(area => (
-                  <div key={area.id} className="flex items-center justify-between">
-                    <span className="font-medium">{area.name}</span>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">{area.mastery}%</Badge>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => onPracticeCategory(area.id)}
-                      >
-                        Practice
-                      </Button>
-                    </div>
-                  </div>
+                  <Dialog key={area.id}>
+                    <DialogTrigger asChild>
+                      <div className="flex items-center justify-between p-3 rounded-lg hover:bg-orange-50 cursor-pointer transition-colors">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${area.color}`} />
+                          <div>
+                            <div className="font-medium">{area.name}</div>
+                            <div className="text-sm text-gray-500">{area.correctAnswers}/{area.totalQuestions} questions</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline">{area.mastery}%</Badge>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onPracticeCategory(area.id);
+                            }}
+                          >
+                            Practice
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{area.name} - {getMasteryMessage(area.mastery)}</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <Progress value={area.mastery} className="h-2" />
+                        <div className="flex flex-wrap gap-2">
+                          {area.tags.map(tag => (
+                            <Badge key={tag} variant="outline">{tag}</Badge>
+                          ))}
+                        </div>
+                        <Button 
+                          onClick={() => onPracticeCategory(area.id)}
+                          className="w-full"
+                        >
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Practice This Area
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 ))}
               </div>
             ) : (
