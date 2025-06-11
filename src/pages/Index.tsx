@@ -23,6 +23,7 @@ import {
 } from '@/data/awsMLQuestions';
 import ProgressDashboard from '@/components/ProgressDashboard';
 import ModulesGrid from '@/components/ModulesGrid';
+import QuizCompleteScreen from '@/components/QuizCompleteScreen';
 
 // Configuration Firebase et variables globales
 const appId = typeof window !== 'undefined' && (window as any).__app_id ? (window as any).__app_id : 'certiflash-demo';
@@ -72,6 +73,9 @@ const CertiFlash: React.FC = () => {
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<string>('home');
+  // New states for quiz completion and correct answers
+  const [quizComplete, setQuizComplete] = useState<boolean>(false);
+  const [correctCount, setCorrectCount] = useState<number>(0);
 
   // Initialisation Firebase
   useEffect(() => {
@@ -250,6 +254,8 @@ const CertiFlash: React.FC = () => {
       setCurrentQuestionIndex(0);
       setSelectedAnswer('');
       setShowResult(false);
+      setQuizComplete(false);
+      setCorrectCount(0);
     } else {
       setQuizQuestions([]);
       setCurrentQuestion(null);
@@ -307,9 +313,8 @@ const CertiFlash: React.FC = () => {
     
     setUserData(newUserData);
     saveUserData(newUserData);
+    if (correct) setCorrectCount(prev => prev + 1);
   };
-
-  // Question suivante
   const nextQuestion = () => {
     setShowResult(false);
     setSelectedAnswer('');
@@ -319,13 +324,11 @@ const CertiFlash: React.FC = () => {
       setCurrentQuestionIndex(nextIndex);
       setCurrentQuestion(quizQuestions[nextIndex]);
     } else {
-      // Le quiz est terminé
-      console.log('Quiz terminé!');
-      goToModules(); // Pour l'instant, retourne aux modules
+      setQuizComplete(true); 
     }
   };
 
-  // Rendu de l'écran de chargement
+  // loading screen
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
@@ -403,10 +406,8 @@ const CertiFlash: React.FC = () => {
               </p>
             </div>
 
-            {/* Add Progress Dashboard */}
-            <ProgressDashboard userData={userData} onPracticeCategory={practiceCategory} />
+            {/* <ProgressDashboard userData={userData} onPracticeCategory={practiceCategory} /> */}
 
-            {/* Use the new ModulesGrid component */}
             <ModulesGrid 
               modules={awsMLModules} 
               userData={userData} 
@@ -429,7 +430,29 @@ const CertiFlash: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'practice' && (
+        {/* Show Quiz Complete Screen if quizComplete is true */}
+        {activeTab === 'practice' && quizComplete && (
+          <QuizCompleteScreen
+            correctCount={correctCount}
+            totalQuestions={quizQuestions.length}
+            onRetry={() => startModule(currentModule!)}
+            onNextModule={() => {
+              // Find next module in awsMLModules
+              if (!currentModule) return;
+              const currentIdx = awsMLModules.findIndex(m => m.id === currentModule.id);
+              const nextModule = awsMLModules[currentIdx + 1];
+              if (nextModule) {
+                startModule(nextModule);
+              } else {
+                goToModules();
+              }
+            }}
+            onReturnToModules={goToModules}
+          />
+        )}
+
+        {/* Quiz in progress */}
+        {activeTab === 'practice' && !quizComplete && (
           <>
             {currentQuestion && quizQuestions.length > 0 ? (
               <QuizPage
