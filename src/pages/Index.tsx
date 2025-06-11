@@ -21,6 +21,7 @@ import {
   awsMLConceptsQuestions,
   awsMLAdvancedQuestions
 } from '@/data/awsMLQuestions';
+import ProgressDashboard from '@/components/ProgressDashboard';
 
 // Configuration Firebase et variables globales
 const appId = typeof window !== 'undefined' && (window as any).__app_id ? (window as any).__app_id : 'certiflash-demo';
@@ -178,6 +179,15 @@ const CertiFlash: React.FC = () => {
     } else {
       // Pour les autres parcours, afficher un message "Bientôt disponible"
       setActiveTab('coming-soon');
+    }
+  };
+
+  // Add practice category function
+  const practiceCategory = (categoryId: string) => {
+    // Find the module that matches this category
+    const module = awsMLModules.find(m => m.id === categoryId);
+    if (module) {
+      startModule(module);
     }
   };
 
@@ -391,6 +401,9 @@ const CertiFlash: React.FC = () => {
                 Maîtrisez tous les services AWS pour réussir votre certification MLS-C01
               </p>
             </div>
+
+            {/* Add Progress Dashboard */}
+            <ProgressDashboard userData={userData} onPracticeCategory={practiceCategory} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {awsMLModules.map((module, index) => (
