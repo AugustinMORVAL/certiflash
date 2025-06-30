@@ -1,73 +1,69 @@
-# Welcome to your Lovable project
+# Certiflash Quest Forge
 
-## Project info
+Certiflash Quest Forge is an interactive, gamified learning platform designed to help users prepare for certification exams. It provides a dynamic and engaging way to study key concepts through a quiz-based format.
 
-**URL**: https://lovable.dev/projects/093d5e01-b3da-45df-a466-8c2c05cd4412
 
-## How can I edit this code?
+## ✨ Features
 
-There are several ways of editing your application.
+- **Interactive Quizzes**: Test your knowledge with a wide range of questions covering all major domains of the AWS ML exam.
+- **Gamified Learning**: Earn experience points (XP), build up your learning streak, and level up as you master new concepts.
+- **Module-Based Studying**: Quizzes are organized into modules based on the official exam guide, including topics like SageMaker, Data Storage, AI Services, and more.
+- **Progress Tracking**: A personal dashboard to monitor your performance, track completed modules, and review your question history.
+- **Real-time Data Sync**: User progress and quiz content are synced with Firebase/Firestore, allowing for a persistent experience.
+- **Anonymous Authentication**: Start learning immediately without the need for a formal sign-up process.
 
-**Use Lovable**
+## 🚀 Technologies Used
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/093d5e01-b3da-45df-a466-8c2c05cd4412) and start prompting.
+This project is built with a modern, component-based architecture using the following technologies:
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: [React](https://react.dev/), [Vite](https://vitejs.dev/), [TypeScript](https://www.typescriptlang.org/)
+- **UI Components**: [shadcn/ui](https://ui.shadcn.com/) - A collection of beautifully designed, accessible, and customizable components.
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Backend & Database**: [Firebase](https://firebase.google.com/) (Authentication, Firestore)
+- **State Management**: [TanStack Query](https://tanstack.com/query/latest) for data fetching and caching.
+- **Routing**: [React Router](https://reactrouter.com/)
 
-**Use your preferred IDE**
+## 🏁 Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+To get a local copy up and running, follow these simple steps.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+You need to have [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed on your machine. Using [nvm](https://github.com/nvm-sh/nvm) (Node Version Manager) is recommended.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Firebase Setup
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1.  Create a new project on the [Firebase Console](https://console.firebase.google.com/).
+2.  Create a new Web App in your Firebase project.
+3.  Copy the `firebaseConfig` object from your project settings.
+4.  This project is set up to load Firebase configuration at runtime. You will need to make your configuration available through a script or environment variables that set the `window.__firebase_config` variable.
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Installation
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1.  **Clone the repository**
+    ```sh
+    git clone <YOUR_GIT_URL>
+    cd certiflash-quest-forge
+    ```
 
-**Edit a file directly in GitHub**
+2.  **Install NPM packages**
+    ```sh
+    npm install
+    ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3.  **Run the development server**
+    ```sh
+    npm run dev
+    ```
+    This will start the Vite development server, and you can view your application at `http://localhost:5173` (or another port if 5173 is busy).
 
-**Use GitHub Codespaces**
+## 📂 Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The main application code is located in the `src/` directory:
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/093d5e01-b3da-45df-a466-8c2c05cd4412) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+-   `src/components/`: Contains all the React components, including UI elements from `shadcn/ui` and custom components like `QuizPage`, `ProgressDashboard`, and `ModulesGrid`.
+-   `src/data/`: Includes the raw quiz data (`awsMLQuestions.ts`) before it's synced to Firestore.
+-   `src/pages/`: Contains the main page components that are mapped to routes. `Index.tsx` is the core of the application.
+-   `src/lib/`: Utility functions.
+-   `src/App.tsx`: The main application component that sets up routing and global providers.
+-   `src/main.tsx`: The entry point of the React application.
